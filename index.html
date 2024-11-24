@@ -68,7 +68,7 @@
         color: #ffffff;
       }
 
-      #yesno button:hover {
+      #yes-btn-2:hover {
         background-color: #ffffff;
         color: rgb(0, 0, 0);
         border: none;
@@ -106,6 +106,8 @@
       #no-btn {
         width: 100%;
         margin: 0 0 0 5px;
+        position: relative;
+        transition: transform 0.3s ease; /* Smooth movement */
       }
 
       #work-together-btn {
@@ -408,25 +410,30 @@
 
       // Event listeners for Yes and No buttons
       const yesBtn = document.getElementById("yes-btn");
-      const noBtn = document.getElementById("no-btn");
       const popup = document.getElementById("popup");
 
-      yesBtn.addEventListener("click", function () {
-        popup.classList.remove("hidden");
-        popup.classList.add("visible");
-      });
+      // unclickable no starts here
+      const noBtn = document.getElementById("no-btn");
 
-      // Add random movement for the No button on hover, but ensure it doesn't overlap with the mouse
-      noBtn.addEventListener("mouseover", function (e) {
+      // Function to randomly move the button
+      function moveNoButton(e) {
         let randomX, randomY;
 
-        // Calculate a safe position by avoiding the mouse's position
         do {
-          randomX = Math.floor(Math.random() * 300) - 150; // randomize X within -150px to 150px
-          randomY = Math.floor(Math.random() * 300) - 150; // randomize Y within -150px to 150px
+          randomX = Math.random() * 400 - 200; // Random range: -200 to 200px
+          randomY = Math.random() * 400 - 200; // Random range: -200 to 200px
         } while (isNearMouse(randomX, randomY, e.clientX, e.clientY));
 
+        // Apply new position
         noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      }
+
+      // Hover event listener to trigger the move
+      noBtn.addEventListener("mouseover", moveNoButton);
+
+      // Continuous tracking to ensure it keeps moving when mouse follows
+      noBtn.addEventListener("mousemove", function (e) {
+        moveNoButton(e);
       });
 
       // Helper function to check if the "No" button is too close to the mouse
@@ -440,14 +447,8 @@
             Math.pow(buttonCenterY - mouseY, 2)
         );
 
-        return distance < 50; // Set a threshold distance (in pixels) to ensure it's not too close to the mouse
+        return distance < 150; // Keep the button at least 150px away
       }
-
-      // "Let’s Work Together" button functionality
-      const workTogetherBtn = document.getElementById("work-together-btn");
-      workTogetherBtn.addEventListener("click", function () {
-        alert("Let’s work together on this project!");
-      });
     </script>
   </body>
 </html>
